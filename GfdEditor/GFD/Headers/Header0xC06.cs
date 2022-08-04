@@ -6,7 +6,6 @@ namespace GfdEditor.GFD.Headers
 {
     public class Header0xC06
     {
-        //https://github.com/onepiecefreak3/GFDRenderer/blob/master/GFDv1v2.txt
         public string Magic { get; set; }
         public int Version { get; set; }
         public int Unknown0 { get; set; }
@@ -41,7 +40,6 @@ namespace GfdEditor.GFD.Headers
                 TextureCount = br.ReadInt32();
                 GlyphCount = br.ReadInt32();
                 ExtraEntriesCount = br.ReadInt32();
-                //GlyMaxWidth = br.ReadSingle();
                 GlyphMaxHeight = 32;
                 Baseline = br.ReadSingle();
                 Descender = br.ReadSingle();

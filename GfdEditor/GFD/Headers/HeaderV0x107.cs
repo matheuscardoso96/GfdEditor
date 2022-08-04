@@ -6,7 +6,6 @@ namespace GfdEditor.GFD.Headers
 {
     public class HeaderV0x107
     {
-        //https://github.com/onepiecefreak3/GFDRenderer/blob/master/GFDv1v2.txt
         public string Magic { get; set; }
         public int Version { get; set; }
         public int Unknown0 { get; set; }

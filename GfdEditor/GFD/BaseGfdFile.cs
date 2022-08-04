@@ -19,16 +19,16 @@ namespace GfdEditor.GFD
         public BaseGFDHeader Header { get; set; }
         public List<BaseGlyph> Glyphs { get; set; } = new();
         public List<GlypthImage> GlypthImages { get; set; } = new();
-        public string CaminhoDeGfd { get; set; }
-        public string NomeDoGfd { get; set; }
-        public Bitmap BaseGerarPreviaInGame { get; set; } = null!;
-        public Bitmap PreviaComLinhaBaseIdividual { get; set; } = null!;
+        public string GfdPath { get; set; }
+        public string GfdName { get; set; }
+        public Bitmap BaseLineInGamePreview { get; set; } = null!;
+        public Bitmap BaseIndividualInGamePreview { get; set; } = null!;
 
         public BaseGfdFile(string diretorioGfd, BaseGfdViewModel gfdViewModel)
         {
             LoadErrors = new();
-            NomeDoGfd = Path.GetFileName(diretorioGfd);
-            CaminhoDeGfd = diretorioGfd;
+            GfdName = Path.GetFileName(diretorioGfd);
+            GfdPath = diretorioGfd;
             BinaryReader br = new(File.OpenRead(diretorioGfd));
             LoadGfdVersion(br, gfdViewModel);
             if (LoadErrors.Count > 0)
@@ -42,9 +42,9 @@ namespace GfdEditor.GFD
             }
 
             br.Close();
-            BaseGerarPreviaInGame = GerarImagensDePrevia(new Bitmap(400, 100));
-            PreviaComLinhaBaseIdividual = GerarImagensDePrevia(new Bitmap(150, 150));
-            CarregarImagens();
+            BaseLineInGamePreview = GerarImagensDePrevia(new Bitmap(400, 100));
+            BaseIndividualInGamePreview = GerarImagensDePrevia(new Bitmap(150, 150));
+            LoadImagens();
 
         }
 
@@ -126,8 +126,8 @@ namespace GfdEditor.GFD
                     break;
             }
 
-            File.WriteAllBytes(CaminhoDeGfd, novoGfd.ToArray());
-            return CaminhoDeGfd;
+            File.WriteAllBytes(GfdPath, novoGfd.ToArray());
+            return GfdPath;
         }
 
         public void SerializeTGAAC(BinaryWriter bw)
@@ -175,7 +175,7 @@ namespace GfdEditor.GFD
             return bitmap;
         }
 
-        private void CarregarImagens()
+        private void LoadImagens()
         {
 
             foreach (var tex in GlypthImages)
@@ -188,8 +188,6 @@ namespace GfdEditor.GFD
                 }
                 else
                     LoadErrors.Add($"Image not found: {tex.Name}");
-
-
 
             }
 
@@ -230,30 +228,30 @@ namespace GfdEditor.GFD
 
         }
 
-        public Bitmap ObtenhaImagemDeGlifo(BaseGlyph propriedades)
+        public Bitmap GetGlyphImage(BaseGlyph properties)
         {
 
-            Rectangle cloneRect = new(propriedades.GlyphXPosition, propriedades.GlyphYPosition, (int)propriedades.CharWidth, (int)propriedades.CharHeight);
-            PixelFormat format = GlypthImages[propriedades.TextureId].Image.PixelFormat;
+            Rectangle cloneRect = new(properties.GlyphXPosition, properties.GlyphYPosition, (int)properties.CharWidth, (int)properties.CharHeight);
+            PixelFormat format = GlypthImages[properties.TextureId].Image.PixelFormat;
             var bitmap = new Bitmap(100, (int)Header.GlyphMaxHeight + 1, format);
             using var g = Graphics.FromImage(bitmap);
-            g.DrawImage(GlypthImages[propriedades.TextureId].Image, 0, 0, cloneRect, GraphicsUnit.Pixel);
+            g.DrawImage(GlypthImages[properties.TextureId].Image, 0, 0, cloneRect, GraphicsUnit.Pixel);
             return bitmap;
 
 
         }
 
-        public Bitmap GerarImagemComTratamento(BaseGlyph propriedade)
+        public Bitmap GeneratePreviewWithGlypthProperties(BaseGlyph properties)
         {
-            return GerarImagemComTratamentoComArguementos((int)propriedade.CharWidth, (int)propriedade.CharHeight, (int)propriedade.GlyphWidth, ObtenhaImagemDeGlifo(propriedade));
+            return GeneratePreviewWithProperties((int)properties.CharWidth, (int)properties.CharHeight, (int)properties.GlyphWidth, GetGlyphImage(properties));
 
         }
 
-        private static Bitmap GerarImagemComTratamentoComArguementos(int larguraCaractere, int alturaCaractere, int larguraDoGlifo, Bitmap imgCaractere)
+        private static Bitmap GeneratePreviewWithProperties(int larguraCaractere, int alturaCaractere, int larguraDoGlifo, Bitmap charImage)
         {
-            Bitmap fonte = new(imgCaractere);
+            Bitmap fonte = new(charImage);
 
-            if (imgCaractere != null)
+            if (charImage != null)
             {
 
                 using Graphics g = Graphics.FromImage(fonte);
@@ -269,10 +267,10 @@ namespace GfdEditor.GFD
             return fonte;
         }
 
-        public Bitmap GerarPreviaInGame(string text)
+        public Bitmap GenerateInGamePreviewFromText(string text)
         {
 
-            Bitmap previa = new(BaseGerarPreviaInGame);
+            Bitmap previa = new(BaseLineInGamePreview);
 
             using (Graphics g = Graphics.FromImage(previa))
             {
@@ -284,7 +282,7 @@ namespace GfdEditor.GFD
 
                     if (pg != null)
                     {
-                        g.DrawImage(ObtenhaImagemDeGlifo(pg), valorX + pg.XFix, pg.YFix);
+                        g.DrawImage(GetGlyphImage(pg), valorX + pg.XFix, pg.YFix);
                         valorX += (int)pg.GlyphWidth;
                     }
                 }
@@ -295,13 +293,13 @@ namespace GfdEditor.GFD
             return previa;
         }
 
-        public Bitmap GerarPreviaComLinhaBaseIndividual(BaseGlyph propiedade)
+        public Bitmap GeneratePreviewBaseline(BaseGlyph propiedade)
         {
-            Bitmap previa = new(PreviaComLinhaBaseIdividual);
+            Bitmap previa = new(BaseIndividualInGamePreview);
 
             using (Graphics g = Graphics.FromImage(previa))
             {
-                g.DrawImage(ObtenhaImagemDeGlifo(propiedade), propiedade.XFix, propiedade.YFix);
+                g.DrawImage(GetGlyphImage(propiedade), propiedade.XFix, propiedade.YFix);
             }
 
             return previa;
@@ -319,7 +317,6 @@ namespace GfdEditor.GFD
                 using Graphics e = Graphics.FromImage(preview);
                 SolidBrush drawBrush = new(Color.White);
                 e.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                //float total = e.MeasureString(model.CharToAdd, font, 0, StringFormat.GenericTypographic).Width;
                 Point origin = new(model.X, model.Y);
                 e.DrawString(model.CharToAdd, font, drawBrush, origin);
             }

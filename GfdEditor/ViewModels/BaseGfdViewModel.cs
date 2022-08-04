@@ -30,10 +30,10 @@ namespace GfdEditor.ViewModels
             if (GfdFile is not null && SelectedGlyph is not null && !isClone)
             {
                 FontImage = GfdFile.GeneratePreview(SelectedGlyph).ToBitmapSource();
-                GyphImage = GfdFile.GerarImagemComTratamento(SelectedGlyph).ToBitmapSource();
-                GyphImageWithBaseLine = GfdFile.GerarPreviaComLinhaBaseIndividual(SelectedGlyph).ToBitmapSource();
+                GyphImage = GfdFile.GeneratePreviewWithGlypthProperties(SelectedGlyph).ToBitmapSource();
+                GyphImageWithBaseLine = GfdFile.GeneratePreviewBaseline(SelectedGlyph).ToBitmapSource();
                 if (TestString is not null)
-                    InGamePreview = GfdFile.GerarPreviaInGame(TestString).ToBitmapSource();
+                    InGamePreview = GfdFile.GenerateInGamePreviewFromText(TestString).ToBitmapSource();
             }
 
 
@@ -107,8 +107,8 @@ namespace GfdEditor.ViewModels
                 if (SelectedGlyph is not null && GfdFile != null)
                 {
                     FontImage = GfdFile.GeneratePreview(SelectedGlyph).ToBitmapSource();
-                    GyphImage = GfdFile.GerarImagemComTratamento(SelectedGlyph).ToBitmapSource();
-                    GyphImageWithBaseLine = GfdFile.GerarPreviaComLinhaBaseIndividual(SelectedGlyph).ToBitmapSource();
+                    GyphImage = GfdFile.GeneratePreviewWithGlypthProperties(SelectedGlyph).ToBitmapSource();
+                    GyphImageWithBaseLine = GfdFile.GeneratePreviewBaseline(SelectedGlyph).ToBitmapSource();
                     InsertButtons = true;
                 }
 
@@ -205,7 +205,7 @@ namespace GfdEditor.ViewModels
                 NotifyPropertyChanged(nameof(TestString));
 
                 if (GfdFile != null)
-                    InGamePreview = GfdFile.GerarPreviaInGame(TestString).ToBitmapSource();
+                    InGamePreview = GfdFile.GenerateInGamePreviewFromText(TestString).ToBitmapSource();
             }
         }
 
@@ -472,7 +472,7 @@ namespace GfdEditor.ViewModels
             {
                 GfdFile = gfd;
                 SaveEnabled = true;
-                MainWindowTitle = GfdFile.NomeDoGfd;
+                MainWindowTitle = GfdFile.GfdName;
                 OpenEnabled = false;
                 CloseEnabled = true;
                 InsertButtons = true;
@@ -486,7 +486,7 @@ namespace GfdEditor.ViewModels
         public void SaveGfd()
         {
             GfdFile?.Save();
-            MessageBox.Show($"{GfdFile?.NomeDoGfd} saved successfully.");
+            MessageBox.Show($"{GfdFile?.GfdName} saved successfully.");
         }
 
 
@@ -609,7 +609,7 @@ namespace GfdEditor.ViewModels
         {
             if (EditableGlyph is not null && GfdFile is not null)
             {
-                GyphImage = GfdFile.GerarImagemComTratamento(EditableGlyph).ToBitmapSource();
+                GyphImage = GfdFile.GeneratePreviewWithGlypthProperties(EditableGlyph).ToBitmapSource();
                 FontImage = GfdFile.GeneratePreview(EditableGlyph).ToBitmapSource();
             }
 
