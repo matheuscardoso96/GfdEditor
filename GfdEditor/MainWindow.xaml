@@ -1,0 +1,237 @@
+﻿<Window x:Class="GfdEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Icon="Resources\favicon.ico"
+        Title="{Binding MainWindowTitle, UpdateSourceTrigger=PropertyChanged}" Height="760" Width="1366">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="159*"/>
+            <ColumnDefinition Width="1207*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="500"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <DockPanel Height="20" Grid.Row="0">
+                <Menu DockPanel.Dock="Top">
+
+                    <MenuItem Header="File">
+                        <MenuItem IsEnabled="{Binding OpenEnabled, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Header="Open" Command="{Binding Commands[GetGfdPath]}"/>
+                        <MenuItem IsEnabled="{Binding CloseEnabled, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Header="Close" Command="{Binding Commands[CloseGfd]}"/>
+                    </MenuItem>
+                </Menu>
+
+            </DockPanel>
+
+
+            <Button Command="{Binding Commands[SaveGfd]}" Grid.Row="1" Margin="0,0,0,5" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" HorizontalAlignment="Left" Width="24" Height="24" IsEnabled="{Binding SaveEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <Image Source="Resources/SaveStatusBar1_16x.png"/>
+            </Button>
+
+
+
+            <DataGrid SelectionMode="Single" Name="DgChars"  IsEnabled="{Binding IsDataGridEnabled}" SelectedItem="{Binding SelectedGlyph}" CanUserAddRows="True" Margin="0,0,0,10" Grid.Column="0" ItemsSource="{Binding GfdFile.Glyphs, Mode=TwoWay}" CanUserReorderColumns="False" Grid.Row="2" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn IsReadOnly="True" Header="Code" Binding="{Binding Path=Code, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Width="40" Header="Char" Binding="{Binding Path=Character, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Width="40" Header="X" Binding="{Binding Path=GlyphXPosition, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Width="40" Header="Y" Binding="{Binding Path=GlyphYPosition, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Width="50" Header="Width" Binding="{Binding Path=CharWidth, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Width="50" Header="Height" Binding="{Binding Path=CharHeight, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="X Fix" Binding="{Binding Path=XFix, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Y Fix" Binding="{Binding Path=YFix, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Glyph width" Binding="{Binding Path=GlyphWidth, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Texture ID" Binding="{Binding Path=TextureId, UpdateSourceTrigger=PropertyChanged}"/>
+
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Grid Grid.Row="2"  Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="4*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <DockPanel  Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Black" Margin="10,0,0,10">
+                    <Image Stretch="Uniform" StretchDirection="DownOnly" Source="{Binding FontImage, Mode=TwoWay}"></Image>
+                </DockPanel>
+
+                <Grid  Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                       
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="170"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        
+
+
+                        <Border Grid.Row="0">
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <DockPanel Grid.Column="0" Margin="10,6,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Black" Width="200" Height="64"  >
+                                    <Image Width="{Binding GyphImage.Width}" Height="{Binding GyphImage.Height}" Source="{Binding GyphImage, Mode=TwoWay}"></Image>
+                                    <Image Width="{Binding GyphImageWithBaseLine.Width}" Height="{Binding GyphImageWithBaseLine.Height}" Source="{Binding GyphImageWithBaseLine, Mode=TwoWay}"></Image>
+                                </DockPanel>
+
+                                <Grid Grid.Column="1" Margin="20,0,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="28"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <DockPanel Grid.Column="0" Grid.Row="0" Width="10" Height="10" Background="Red"/>
+                                    <Label Grid.Column="1" Grid.Row="0" Margin="0,0,0,0">
+                                        <TextBlock Text="Width"/>
+                                    </Label>
+                                    <DockPanel Grid.Row="1" Grid.Column="0"  Width="10" Height="10" Background="Orange"/>
+                                    <Label Grid.Row="1" Grid.Column="1" Margin="0,0,0,0">
+                                        <TextBlock Text="Height"/>
+                                    </Label>
+                                    <DockPanel Grid.Row="2" Grid.Column="0"  Width="10" Height="10" Background="Aquamarine"/>
+                                    <Label Grid.Row="2" Grid.Column="1" Margin="0,0,0,0">
+                                        <TextBlock Text="Glyph Width"/>
+                                    </Label>
+                                    <DockPanel Grid.Row="3" Grid.Column="0"  Width="10" Height="10" Background="Green"/>
+                                    <Label Grid.Row="3" Grid.Column="1" Margin="0,0,0,0">
+                                        <TextBlock Text="Baseline"/>
+                                    </Label>
+                                    <DockPanel Grid.Row="4" Grid.Column="0"  Width="10" Height="10" Background="Purple"/>
+                                    <Label Grid.Row="4" Grid.Column="1" Margin="0,0,0,0">
+                                        <TextBlock Text="Descender"/>
+                                    </Label>
+
+                                </Grid>
+                                
+                                <Label Grid.Column="2" Margin="150,20,0,0">
+                                    <TextBlock>In-game preview</TextBlock>
+                                </Label>
+
+                                <DockPanel Height="100" Grid.Column="2" Background="Black" Margin="20,15,0,0" HorizontalAlignment="Left" Grid.Row="5" Width="400">
+                                    <Image Width="400" Height="100" Source="{Binding InGamePreview, Mode=TwoWay}"/>
+                                </DockPanel>
+
+                                <DockPanel Grid.Column="2" Margin="100,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="5" Width="200" Height="20">
+                                    <TextBox TextAlignment="Justify" VerticalContentAlignment="Bottom" Text="{Binding Path=TestString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"></TextBox>
+                                </DockPanel>
+
+
+                            </Grid>
+                        </Border>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition  Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" IsEnabled="{Binding InsertButtons}" Margin="10,0,20,0" Width="200" Height="20" HorizontalAlignment="Left" Command="{Binding Commands[EnableInsertGlyph]}">
+                                <TextBlock>Insert glyph into table</TextBlock>
+                            </Button>
+                            <Button Grid.Column="1" IsEnabled="{Binding CancelEnabled}" Margin="10,0,0,0" Width="200" Height="20" HorizontalAlignment="Left" Command="{Binding Commands[CancelInsertGlyph]}">
+                                <TextBlock>Cancel insert</TextBlock>
+                            </Button>
+                        </Grid>
+                        
+
+                        <DockPanel Grid.Row="2">
+                            <Label Margin="10,0,0,0">
+                                <TextBlock Text="Char"/>
+                            </Label>
+                            <Label Margin="25,0,0,0">
+                                <TextBlock Text="X"/>
+                            </Label>
+                            <Label Margin="35,0,0,0">
+                                <TextBlock Text="Y"/>
+                            </Label>
+                            <Label Margin="20,0,0,0">
+                                <TextBlock Text="Width" Width="36"/>
+                            </Label>
+                            <Label Margin="5,0,0,0">
+                                <TextBlock Text="Height"/>
+                            </Label>
+                            <Label Margin="5,0,0,0">
+                                <TextBlock Text="X Fix"/>
+                            </Label>
+                            <Label Margin="15,0,0,0">
+                                <TextBlock Text="Y Fix"/>
+                            </Label>
+                            <Label>
+                                <TextBlock Text="Glyph width"/>
+                            </Label>
+                            <Label>
+                                <TextBlock Text="Texture Id"/>
+                            </Label>
+
+                        </DockPanel>
+
+                        <DockPanel  IsEnabled="{Binding InsertEnabled}" Grid.Row="3" Height="auto" Width="700" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+                            <TextBox Text="{Binding Path=CharToAdd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Left" Margin="10,0,0,0" Width="40" Height="20"></TextBox>
+                            <TextBox Text="{Binding Path=X, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Left" Margin="10,0,0,0" Width="40" Height="20"></TextBox>
+                            <TextBox Text="{Binding Path=Y, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Left" Margin="10,0,0,0" Width="40" Height="20"></TextBox>
+                            <TextBox Text="{Binding Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="10,0,0,0" Width="40" Height="20"></TextBox>
+                            <TextBox Text="{Binding Path=Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="10,0,0,0" Width="40" Height="20"></TextBox>
+                            <TextBox Text="{Binding Path=XFix, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="10,0,0,0" Width="40" Height="20"></TextBox>
+                            <TextBox Text="{Binding Path=YFix, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="10,0,0,0" Width="40" Height="20"></TextBox>
+                            <TextBox Text="{Binding Path=GlyphWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="10,0,0,0" Width="40" Height="20"></TextBox>
+                            <TextBox Text="{Binding Path=TextureIdNewGlyth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="30,0,0,0" Width="40" Height="20"></TextBox>
+                            <Button Command="{Binding Commands[InsertGlyph]}" Margin="30,0,0,0" HorizontalAlignment="Left" Grid.Row="2" Width="50">
+                                <TextBlock>Insert</TextBlock>
+                            </Button>
+
+                        </DockPanel>
+
+                        
+
+                    </Grid>
+
+                   
+
+
+                </Grid>
+
+
+            </Grid>
+
+
+        </Grid>
+    </Grid>
+</Window>
