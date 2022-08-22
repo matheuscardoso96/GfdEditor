@@ -555,8 +555,14 @@ namespace GfdEditor.ViewModels
                     EditableGlyph = GfdFile.Glyphs.First().Clone() as BaseGlyph;
 
 
-                    if (EditableGlyph != null)
+
+                    if (EditableGlyph != null) 
+                    {
+                        EditableGlyph.Padding = 0;
                         SetEditableGlyph(EditableGlyph);
+
+                    }
+                        
 
 
                 }
