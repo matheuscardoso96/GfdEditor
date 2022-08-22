@@ -104,7 +104,7 @@ namespace GfdEditor.GFD.Glyphs
             get => _textureId;
             set
             {
-                if (value < _gfdViewModel.TextureCount - 1 && value >= 0)
+                if (value < _gfdViewModel.TextureCount && value >= 0)
                 {
                     _textureId = value;
                     _gfdViewModel.NotifyGlypthUpdate(nameof(TextureId), _isClone);
