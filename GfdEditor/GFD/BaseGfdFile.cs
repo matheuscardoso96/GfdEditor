@@ -74,6 +74,7 @@ namespace GfdEditor.GFD
         {
             var header = new HeaderV0x107(br);
             Header = new BaseGFDHeader(header);
+            gfdViewModel.TextureCount = header.TextureCount;
             var glyphs = new List<Glyph0x107>();
             for (int i = 0; i < header.GlyphCount; i++)
                 glyphs.Add(new Glyph0x107(br));
@@ -88,6 +89,7 @@ namespace GfdEditor.GFD
         {
             var header = new HeaderV0x107(br);
             Header = new BaseGFDHeader(header);
+            gfdViewModel.TextureCount = header.TextureCount;
             var glyphs = new List<Glyph0xF06>();
             for (int i = 0; i < header.GlyphCount; i++)
                 glyphs.Add(new Glyph0xF06(br));
@@ -100,6 +102,7 @@ namespace GfdEditor.GFD
         {
             var header = new Header0xC06(br);
             Header = new BaseGFDHeader(header);
+            gfdViewModel.TextureCount = header.TextureCount;
             var glyphs = new List<Glyph0xC06>();
             for (int i = 0; i < header.GlyphCount; i++)
                 glyphs.Add(new Glyph0xC06(br));
